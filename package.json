@@ -1,0 +1,25 @@
+{
+  "name": "astro-mermaid-renderer-cli-smol",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Astro integration for server-side mermaid diagram rendering via svgdom — no client-side JavaScript required",
+  "author": "Nathan Contino <ncontino@lambdalatitudinarians.org>",
+  "license": "MIT",
+  "keywords": ["astro", "astro-integration", "mermaid", "ssr", "remark", "diagram"],
+  "exports": {
+    ".": "./index.mjs",
+    "./styles.css": "./src/styles.css"
+  },
+  "files": ["index.mjs", "src/"],
+  "peerDependencies": {
+    "astro": ">=4.0.0",
+    "mermaid": ">=10.0.0"
+  },
+  "dependencies": {
+    "svgdom": "^0.1.28",
+    "unist-util-visit": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "mermaid": { "optional": false }
+  }
+}
