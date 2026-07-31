@@ -6,6 +6,9 @@
   "author": "Nathan Contino <ncontino@lambdalatitudinarians.org>",
   "license": "MIT",
   "keywords": ["astro", "astro-integration", "mermaid", "ssr", "remark", "diagram"],
+  "scripts": {
+    "test": "node --test test/test.mjs"
+  },
   "exports": {
     ".": "./index.mjs",
     "./styles.css": "./src/styles.css"
@@ -21,5 +24,8 @@
   },
   "peerDependenciesMeta": {
     "mermaid": { "optional": false }
+  },
+  "devDependencies": {
+    "mermaid": "^11.0.0"
   }
 }
