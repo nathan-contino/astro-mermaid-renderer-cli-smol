@@ -5,9 +5,9 @@
  *                     svgdom as a headless browser shim. Diagrams that fail are
  *                     left as fenced code blocks.
  *
- * mermaidTitleFix   — reads `title="..."` from code block meta and emits a <p>
- *                     node with the title either above (regular code) or below
- *                     (mermaid) the block.
+ * mermaidTitleFix   — reads `title="..."` from mermaid code block meta and emits
+ *                     a <p data-title-bottom> node below the diagram. Non-mermaid
+ *                     blocks are left alone; rehypeCodeBlocks handles their titles.
  *
  * IMPORTANT: mermaid must be imported at module-evaluation time — Vite's module
  * runner closes before remark callbacks fire, making dynamic imports impossible
@@ -151,13 +151,14 @@ export function remarkMermaidSSR(options = {}) {
 }
 
 /**
- * Remark plugin: reads `title="..."` from code block meta and emits a <p> element.
- * For mermaid blocks the title is placed AFTER (below) the diagram.
- * For all other code blocks it is placed BEFORE.
+ * Remark plugin: reads `title="..."` from mermaid code block meta and emits a
+ * <p data-title-bottom> element AFTER (below) the diagram.
+ * Non-mermaid blocks are left alone -- rehypeCodeBlocks handles their titles.
  */
 export function mermaidTitleFix() {
   return (tree) => {
     visit(tree, 'code', (node, index, parent) => {
+      if (node.lang !== 'mermaid') return;
       const meta = node.meta || '';
       const titleMatch = meta.match(/title=["'](.*?)["']/);
       if (!titleMatch) return;
@@ -167,18 +168,12 @@ export function mermaidTitleFix() {
         type: 'paragraph',
         data: {
           hName: 'p',
-          hProperties: node.lang === 'mermaid'
-            ? { 'data-title-bottom': title }
-            : { 'data-title': title },
+          hProperties: { 'data-title-bottom': title },
         },
         children: [{ type: 'text', value: title }],
       };
 
-      if (node.lang === 'mermaid') {
-        parent.children.splice(index + 1, 0, titleNode);
-      } else {
-        parent.children.splice(index, 0, titleNode);
-      }
+      parent.children.splice(index + 1, 0, titleNode);
       return index + 2;
     });
   };

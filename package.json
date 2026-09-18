@@ -1,6 +1,6 @@
 {
   "name": "astro-mermaid-renderer-cli-smol",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Astro integration for server-side mermaid diagram rendering via svgdom — no client-side JavaScript required",
   "author": "Nathan Contino <ncontino@lambdalatitudinarians.org>",
