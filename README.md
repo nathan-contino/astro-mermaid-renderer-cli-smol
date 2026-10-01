@@ -1,4 +1,4 @@
-# astro-mermaid-renderer-cli-smol
+# astro-better-mermaid
 
 Astro integration that renders ` ```mermaid ` code blocks to inline SVG at build time. No client-side JavaScript is shipped to the browser.
 
@@ -7,7 +7,7 @@ Rendering happens via [svgdom](https://github.com/svgdotjs/svgdom), a headless D
 ## Installation
 
 ```
-npm install astro-mermaid-renderer-cli-smol mermaid svgdom
+npm install astro-better-mermaid mermaid svgdom
 ```
 
 `mermaid` and `svgdom` are peer dependencies — install them alongside this package.
@@ -17,7 +17,7 @@ npm install astro-mermaid-renderer-cli-smol mermaid svgdom
 ```ts
 // astro.config.ts
 import { defineConfig } from 'astro/config';
-import mermaidSSR from 'astro-mermaid-renderer-cli-smol';
+import mermaidSSR from 'astro-better-mermaid';
 
 export default defineConfig({
   integrations: [mermaidSSR()],
@@ -56,7 +56,7 @@ The integration injects a default stylesheet that covers light mode and dark mod
 To use your own styles instead, set `injectCSS: false` and import the bundled CSS as a starting point:
 
 ```css
-@import 'astro-mermaid-renderer-cli-smol/styles.css';
+@import 'astro-better-mermaid/styles.css';
 ```
 
 ### Custom cluster fill colors
@@ -73,7 +73,7 @@ Mermaid's `style X fill:#color` directive injects `!important` inline styles tha
 If you prefer to wire up the remark plugins yourself:
 
 ```ts
-import { remarkMermaidSSR, mermaidTitleFix } from 'astro-mermaid-renderer-cli-smol';
+import { remarkMermaidSSR, mermaidTitleFix } from 'astro-better-mermaid';
 
 export default defineConfig({
   markdown: {

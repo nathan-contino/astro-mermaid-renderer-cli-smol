@@ -1,5 +1,5 @@
 /**
- * Tests for astro-mermaid-renderer-cli-smol.
+ * Tests for astro-better-mermaid.
  *
  * Invokes the remark transformer directly against synthetic AST nodes —
  * no remark pipeline or Astro integration needed.

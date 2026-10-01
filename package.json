@@ -1,29 +1,50 @@
 {
-  "name": "astro-mermaid-renderer-cli-smol",
+  "name": "astro-better-mermaid",
   "version": "0.1.1",
-  "type": "module",
   "description": "Astro integration for server-side mermaid diagram rendering via svgdom — no client-side JavaScript required",
-  "author": "Nathan Contino <ncontino@lambdalatitudinarians.org>",
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "mermaid",
+    "ssr",
+    "remark",
+    "diagram"
+  ],
   "license": "MIT",
-  "keywords": ["astro", "astro-integration", "mermaid", "ssr", "remark", "diagram"],
-  "scripts": {
-    "test": "node --test test/test.mjs"
+  "author": "Nathan Contino <ncontino@lambdalatitudinarians.org>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/better-static-sites/better-static-sites.github.io.git",
+    "directory": "astro-better-mermaid"
   },
+  "homepage": "https://better-static-sites.github.io",
+  "bugs": {
+    "url": "https://github.com/better-static-sites/better-static-sites.github.io/issues"
+  },
+  "type": "module",
   "exports": {
     ".": "./index.mjs",
     "./styles.css": "./src/styles.css"
   },
-  "files": ["index.mjs", "src/"],
-  "peerDependencies": {
-    "astro": ">=4.0.0",
-    "mermaid": ">=10.0.0"
+  "files": [
+    "index.mjs",
+    "src/"
+  ],
+  "scripts": {
+    "test": "node --test test/test.mjs"
   },
   "dependencies": {
     "svgdom": "^0.1.28",
     "unist-util-visit": "^5.0.0"
   },
+  "peerDependencies": {
+    "astro": ">=4.0.0",
+    "mermaid": ">=10.0.0"
+  },
   "peerDependenciesMeta": {
-    "mermaid": { "optional": false }
+    "mermaid": {
+      "optional": false
+    }
   },
   "devDependencies": {
     "mermaid": "^11.0.0"
