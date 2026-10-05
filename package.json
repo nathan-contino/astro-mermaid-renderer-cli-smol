@@ -1,6 +1,6 @@
 {
   "name": "astro-better-mermaid",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Astro integration for server-side mermaid diagram rendering via svgdom — no client-side JavaScript required",
   "keywords": [
     "astro",
@@ -24,6 +24,7 @@
   "type": "module",
   "exports": {
     ".": "./index.mjs",
+    "./style.css": "./src/styles.css",
     "./styles.css": "./src/styles.css"
   },
   "files": [

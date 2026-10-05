@@ -56,8 +56,10 @@ The integration injects a default stylesheet that covers light mode and dark mod
 To use your own styles instead, set `injectCSS: false` and import the bundled CSS as a starting point:
 
 ```css
-@import 'astro-better-mermaid/styles.css';
+@import 'astro-better-mermaid/style.css';
 ```
+
+`astro-better-mermaid/styles.css` resolves to the same file, for parity with releases before 0.1.2.
 
 ### Custom cluster fill colors
 
