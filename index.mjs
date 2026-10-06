@@ -16,16 +16,21 @@
  *   injectCSS    {boolean}  — Auto-inject default styles (default: true)
  *   theme        {string}   — Mermaid theme, e.g. 'default', 'dark', 'neutral' (default: 'default')
  *   securityLevel {string}  — Mermaid securityLevel (default: 'loose')
+ *   cache        {boolean}  — Cache rendered diagrams on disk (default: true)
+ *   cacheDir     {string}   — Cache location (default: node_modules/.cache/astro-better-mermaid)
  *
  * If injectCSS is false, import the styles yourself:
  *   import 'astro-mermaid-ssr/styles.css';
  *
  * To use the remark plugins directly without the integration:
  *   import { remarkMermaidSSR, mermaidTitleFix } from 'astro-mermaid-ssr';
+ *
+ * Sätteri equivalents live at 'astro-better-mermaid/satteri'.
  */
 
 import { fileURLToPath } from 'node:url';
 import { remarkMermaidSSR, mermaidTitleFix } from './src/remark.mjs';
+import { mermaidSSR, mermaidTitle } from './src/satteri.mjs';
 
 export { remarkMermaidSSR, mermaidTitleFix };
 
@@ -37,19 +42,30 @@ export default function astroMermaidSSR(opts = {}) {
     injectCSS = true,
     theme = 'default',
     securityLevel = 'loose',
+    cache,
+    cacheDir,
   } = opts;
 
   return {
     name: 'astro-mermaid-ssr',
     hooks: {
-      'astro:config:setup': ({ updateConfig, injectScript }) => {
+      'astro:config:setup': ({ config, updateConfig, injectScript }) => {
+        const renderOpts = { theme, securityLevel, cache, cacheDir };
+        const processor = config.markdown?.processor;
+        // Sätteri processors keep their options mutable for integrations to extend
+        const satteri = processor?.name === 'satteri';
+        if (satteri) {
+          processor.options.mdastPlugins.push(...(titleFix ? [mermaidTitle()] : []), mermaidSSR(renderOpts));
+        }
         updateConfig({
-          markdown: {
-            remarkPlugins: [
-              ...(titleFix ? [mermaidTitleFix] : []),
-              [remarkMermaidSSR, { theme, securityLevel }],
-            ],
-          },
+          ...(satteri ? {} : {
+            markdown: {
+              remarkPlugins: [
+                ...(titleFix ? [mermaidTitleFix] : []),
+                [remarkMermaidSSR, renderOpts],
+              ],
+            },
+          }),
           vite: {
             ssr: {
               // svgdom and mermaid are Node-only packages; they must not be bundled

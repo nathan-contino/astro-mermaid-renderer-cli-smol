@@ -34,8 +34,12 @@ mermaidSSR({
   securityLevel: 'loose', // mermaid securityLevel
   titleFix: true,         // parse title="..." from code block meta as a caption
   injectCSS: true,        // inject the bundled stylesheet automatically
+  cache: true,            // cache rendered diagrams on disk between builds
+  cacheDir: 'node_modules/.cache/astro-better-mermaid', // where the cache lives
 })
 ```
+
+Rendered diagrams are cached by Mermaid version, theme, security level, and diagram source, so unchanged diagrams skip rendering on later builds. Each SVG id comes from the diagram's position on the page and a hash of its source, so output is stable from build to build.
 
 ### Diagram titles
 
@@ -91,3 +95,23 @@ export default defineConfig({
 ```
 
 `svgdom` and `mermaid` must be listed in `vite.ssr.external` — they are Node-only packages and cannot be bundled into client output.
+
+## Sätteri
+
+When `markdown.processor` is a [Sätteri](https://satteri.bruits.org/) processor, the integration adds its Sätteri plugins to that processor instead of registering remark plugins. Pass the same processor to `mdx()` so MDX files get them too:
+
+```ts
+import mdx from '@astrojs/mdx';
+import { satteri } from '@astrojs/markdown-satteri';
+import mermaidSSR from 'astro-better-mermaid';
+
+const processor = satteri();
+
+export default defineConfig({
+  markdown: { processor },
+  integrations: [mdx({ processor }), mermaidSSR()],
+});
+```
+
+To wire the plugins yourself, use `mermaidTitle` and `mermaidSSR` from `astro-better-mermaid/satteri`, in that order. They take the same options as the remark plugins.
+

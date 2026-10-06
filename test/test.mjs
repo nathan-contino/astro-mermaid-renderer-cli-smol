@@ -15,7 +15,7 @@ import { remarkMermaidSSR, mermaidTitleFix } from '../index.mjs';
 async function render(src, opts = {}) {
   const node = { type: 'code', lang: 'mermaid', meta: null, value: src };
   const tree = { type: 'root', children: [node] };
-  await remarkMermaidSSR(opts)(tree);
+  await remarkMermaidSSR({ cache: false, ...opts })(tree);
   return tree.children[0];
 }
 
@@ -327,7 +327,7 @@ test('multiple diagrams in one tree → all processed', async () => {
     { type: 'code', lang: 'mermaid', meta: null, value: DIAGRAMS.stateDiagram },
   ];
   const tree = { type: 'root', children: [...nodes] };
-  await remarkMermaidSSR()(tree);
+  await remarkMermaidSSR({ cache: false })(tree);
   for (const [i, node] of tree.children.entries()) {
     assert.equal(node.type, 'html', `diagram ${i} should be rendered`);
     assert.ok(node.value.includes('<svg'), `diagram ${i} should contain SVG`);
@@ -337,7 +337,7 @@ test('multiple diagrams in one tree → all processed', async () => {
 test('non-mermaid code blocks → left untouched', async () => {
   const node = { type: 'code', lang: 'javascript', meta: null, value: 'const x = 1;' };
   const tree = { type: 'root', children: [node] };
-  await remarkMermaidSSR()(tree);
+  await remarkMermaidSSR({ cache: false })(tree);
   assert.equal(tree.children[0].type, 'code');
   assert.equal(tree.children[0].lang, 'javascript');
 });
@@ -363,13 +363,12 @@ test('mermaidTitleFix: adds title node after mermaid block', () => {
   assert.equal(titleNode.data.hProperties['data-title-bottom'], 'OAuth Flow');
 });
 
-test('mermaidTitleFix: adds title node before non-mermaid block', () => {
+test('mermaidTitleFix: leaves non-mermaid blocks alone (rehypeCodeBlocks handles their titles)', () => {
   const code = { type: 'code', lang: 'javascript', meta: 'title="Example"', value: 'const x = 1' };
   const tree = { type: 'root', children: [code] };
   mermaidTitleFix()(tree);
-  assert.equal(tree.children.length, 2);
-  const titleNode = tree.children[0];
-  assert.ok('data-title' in titleNode.data.hProperties, 'non-mermaid title should be data-title');
+  assert.equal(tree.children.length, 1);
+  assert.equal(tree.children[0], code);
 });
 
 test('mermaidTitleFix: no meta → no title node added', () => {
